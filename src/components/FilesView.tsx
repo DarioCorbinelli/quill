@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/Button'
 import { trpc } from '@/lib/trpc/trpc'
 import { cn } from '@/lib/utils'
 import { format } from 'date-fns'
+import {it} from 'date-fns/locale'
 import { Ghost, Loader2, MessageSquare, Plus, Trash } from 'lucide-react'
 import Link from 'next/link'
 import { FC, HTMLAttributes, useState } from 'react'
@@ -35,7 +36,7 @@ const FilesView: FC<FilesViewProps> = ({ className, ...rest }) => {
   if (files && files.length === 0)
     return (
       <div className='mt-16 flex flex-col items-center gap-2'>
-        <Ghost className='h-8 w-8 text-foreground-800' />
+        <Ghost className='h-8 w-8 text-typography-800' />
         <h3 className='text-xl font-semibold'>Piuttosto vuoto da queste parti</h3>
         <p>Carichiamo il tuo primo PDF.</p>
       </div>
@@ -56,16 +57,16 @@ const FilesView: FC<FilesViewProps> = ({ className, ...rest }) => {
                     <div className='h-10 w-10 flex-shrink-0 rounded-full bg-primary' />
                     <div className='flex-1 truncate'>
                       <div className='flex items-center space-x-3'>
-                        <h3 className='truncate text-lg font-medium text-foreground-900'>{f.name}</h3>
+                        <h3 className='truncate text-lg font-medium text-typography-900'>{f.name}</h3>
                       </div>
                     </div>
                   </div>
                 </Link>
 
-                <div className='mt-4 grid grid-cols-3 place-items-center gap-6 px-6 py-2 text-xs text-foreground-500'>
+                <div className='mt-4 grid grid-cols-3 place-items-center gap-6 px-6 py-2 text-xs text-typography-500'>
                   <div className='flex items-center gap-2'>
                     <Plus className='h-4 w-4' />
-                    {format(new Date(f.createdAt), 'MMM yyyy')}
+                    {format(new Date(f.createdAt), 'MMM yyyy', {locale: it})}
                   </div>
 
                   <div className='flex items-center gap-2'>

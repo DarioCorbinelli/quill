@@ -10,7 +10,7 @@ import { useUploadThing } from '@/lib/uploadthing'
 import { cn } from '@/lib/utils'
 import { Cloud, File as FileIcon, Loader2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { FC, useState } from 'react'
+import { FC, HTMLAttributes, useState } from 'react'
 import Dropzone from 'react-dropzone'
 
 interface UploadDropzoneProps {
@@ -63,12 +63,12 @@ const UploadDropzone: FC<UploadDropzoneProps> = ({ isSubscribed }) => {
           <div
             {...getRootProps()}
             className={cn(
-              'flex h-64 cursor-pointer flex-col items-center justify-center rounded-md border border-dashed border-border-300 bg-background-100 px-12 py-6 text-sm text-foreground-500 hover:bg-background-200',
-              { 'bg-background-200': acceptedFiles && acceptedFiles[0] }
+              'flex h-64 cursor-pointer flex-col items-center justify-center rounded-md border border-dashed border-border-300 bg-separation-50 px-12 py-6 text-sm text-typography-500 hover:bg-separation-100',
+              { 'bg-separation-100': acceptedFiles && acceptedFiles[0] }
             )}
           >
             <Cloud className='h-6 w-6' />
-            <p className='mt-2 text-foreground-700'>
+            <p className='mt-2 text-typography-700'>
               Clicca o <span className='font-semibold'>trascina un file</span> per caricarlo.
             </p>
             <p className='mt-1 text-sm'>Dimesione max: {isSubscribed ? PLANS[1].maxSize : PLANS[0].maxSize}</p>
@@ -84,8 +84,8 @@ const UploadDropzone: FC<UploadDropzoneProps> = ({ isSubscribed }) => {
                   </div>
                   <Progress value={progress} indicatorColor={progress === 100 ? 'bg-success-500' : ''} className='mt-4 h-1' />
                   {progress === 100 && (
-                    <span className='mt-2 flex items-center gap-1 text-xs text-foreground/50'>
-                      <Loader2 className='h-4 w-4 animate-spin' />
+                    <span className='mt-2 flex items-center text-center gap-1 text-sm text-typography-700'>
+                      <Loader2 className='h-3 w-3 animate-spin' />
                       Rendirizzamento...
                     </span>
                   )}
@@ -106,15 +106,15 @@ const UploadDropzone: FC<UploadDropzoneProps> = ({ isSubscribed }) => {
   )
 }
 
-interface UploadBtnProps {
+interface UploadBtnProps extends HTMLAttributes<HTMLButtonElement> {
   isSubscribed: boolean
 }
 
-const UploadBtn: FC<UploadBtnProps> = ({ isSubscribed }) => {
+const UploadBtn: FC<UploadBtnProps> = ({ isSubscribed, className, ...rest }) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>Carica PDF</Button>
+        <Button className={cn('', className)} {...rest}>Carica PDF</Button>
       </DialogTrigger>
       <DialogContent className='p-10'>
         <UploadDropzone isSubscribed={isSubscribed} />

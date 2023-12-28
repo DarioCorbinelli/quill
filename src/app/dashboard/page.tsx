@@ -12,9 +12,9 @@ const page: FC<pageProps> = async ({}) => {
 
     return (
       <main className='container'>
-        <div className='mt-8 flex items-end justify-between gap-4 border-b border-border-200 pb-4'>
-          <h1 className='text-5xl font-bold text-foreground-800'>I Miei File</h1>
-          <UploadBtn isSubscribed={plan.isSubscribed} />
+        <div className='mt-8 flex items-end justify-between gap-4 border-b border-border-200 pb-5'>
+          <h1 className='text-5xl font-bold text-typography-900'>I Miei File</h1>
+          <UploadBtn isSubscribed={plan.isSubscribed} className='mb-1' />
         </div>
         <FilesView className='mt-8' />
       </main>
