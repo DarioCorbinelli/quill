@@ -4,7 +4,6 @@ import { trpc } from '@/lib/trpc/trpc'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { httpBatchLink } from '@trpc/client'
 import { FC, PropsWithChildren, useState } from 'react'
-import { ThemeProvider } from 'next-themes'
 
 interface ProvidersProps extends PropsWithChildren {}
 
@@ -22,9 +21,7 @@ const Providers: FC<ProvidersProps> = ({ children }) => {
 
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider>{children}</ThemeProvider>
-      </QueryClientProvider>
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     </trpc.Provider>
   )
 }

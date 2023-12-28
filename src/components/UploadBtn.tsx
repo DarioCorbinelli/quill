@@ -63,8 +63,8 @@ const UploadDropzone: FC<UploadDropzoneProps> = ({ isSubscribed }) => {
           <div
             {...getRootProps()}
             className={cn(
-              'flex h-64 cursor-pointer flex-col items-center justify-center rounded-md border border-dashed border-border-300 bg-background-50 px-12 py-6 text-sm text-foreground-500 hover:bg-background-100',
-              { 'bg-background-100': acceptedFiles && acceptedFiles[0] }
+              'flex h-64 cursor-pointer flex-col items-center justify-center rounded-md border border-dashed border-border-300 bg-background-100 px-12 py-6 text-sm text-foreground-500 hover:bg-background-200',
+              { 'bg-background-200': acceptedFiles && acceptedFiles[0] }
             )}
           >
             <Cloud className='h-6 w-6' />

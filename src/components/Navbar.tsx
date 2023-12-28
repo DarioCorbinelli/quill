@@ -1,4 +1,3 @@
-import ThemeSwitch from '@/components/ThemeSwitch'
 import UserAccountNav from '@/components/UserAccountNav'
 import { buttonVariants } from '@/components/ui/Button'
 import { getUserSubscriptionPlan } from '@/lib/stripe'
@@ -30,7 +29,6 @@ const Navbar: FC<NavbarProps> = async ({ }) => {
               <Link href='/dashboard' className={buttonVariants({ variant: 'ghost', size: 'sm' })}>
                 Dashboard
               </Link>
-              <ThemeSwitch />
               <UserAccountNav {...user} isSubscribed={plan.isSubscribed} className='ml-2.5' />
             </>
           ) : (
