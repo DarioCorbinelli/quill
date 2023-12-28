@@ -18,7 +18,7 @@ const Navbar: FC<NavbarProps> = async ({ }) => {
   const plan = await getUserSubscriptionPlan()
 
   return (
-    <div className='sticky inset-x-0 top-0 z-30 h-14 border-b bg-navigation/75 backdrop-blur-lg'>
+    <div className='sticky inset-x-0 top-0 z-30 h-14 border-b border-border-200 bg-navigation/75 backdrop-blur-lg transition-all'>
       <div className='container flex h-full items-center justify-between gap-8'>
         <Link className='font-semibold outline-offset-2' href='/'>
           Quill.
