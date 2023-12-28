@@ -4,6 +4,7 @@ import { TRPCError } from '@trpc/server'
 import { getUserSubscriptionPlan, stripe } from '@/lib/stripe'
 import { absoluteUrl } from '@/helpers/utils'
 import { PLANS } from '@/config/stripe'
+import z from 'zod'
 
 export const appRouter = router({
   initUserAccount: privateProcedure.query(
@@ -56,6 +57,13 @@ export const appRouter = router({
 
     return { url: stripeSession.url }
   }),
+  getUserFile: privateProcedure.input(z.object({ key: z.string() })).mutation(async ({ ctx: { userId }, input: { key } }) => {
+    const file = await db.file.findUnique({ where: { key } })
+
+    if (!file) throw new TRPCError({code: 'NOT_FOUND'})
+
+    return file
+  })
 })
 
 export type AppRouter = typeof appRouter
