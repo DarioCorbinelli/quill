@@ -154,25 +154,25 @@ const page: FC<pageProps> = async ({}) => {
                   <div className='p-5'>
                     {plan === 'Free' ? (
                       <Link
-                        href={user ? '/dashboard' : '/sign-in'}
+                        href={user ? '/dashboard' : '/sign-in?post_login_redirect_url=/pricing'}
                         className={buttonVariants({
                           className: 'w-full',
                           variant: 'secondary',
                         })}
                       >
-                        {user ? 'Fai l\'upgrade ora' : 'Registrati'}
+                        {user ? "Fai l'upgrade ora" : 'Registrati'}
                         <ArrowRight className='ml-1.5 h-5 w-5' />
                       </Link>
                     ) : user ? (
                       <UpgradeBtn />
                     ) : (
                       <Link
-                        href='/sign-in'
+                        href='/sign-in?post_login_redirect_url=/pricing'
                         className={buttonVariants({
                           className: 'w-full',
                         })}
                       >
-                        {user ? 'Fai l\'upgrade ora' : 'Registrati'}
+                        {user ? "Fai l'upgrade ora" : 'Registrati'}
                         <ArrowRight className='ml-1.5 h-5 w-5' />
                       </Link>
                     )}
