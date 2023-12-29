@@ -5,6 +5,10 @@ import { getUserSubscriptionPlan, stripe } from '@/lib/stripe'
 import { absoluteUrl } from '@/helpers/utils'
 import { PLANS } from '@/config/stripe'
 import z from 'zod'
+import { utapi } from '@/lib/uploadthing/uploadthing-server'
+import { SupabaseVectorStore } from 'langchain/vectorstores/supabase'
+import { OpenAIEmbeddings } from 'langchain/embeddings/openai'
+import { supabase } from '@/lib/supabase'
 
 export const appRouter = router({
   initUserAccount: privateProcedure.query(
@@ -58,7 +62,7 @@ export const appRouter = router({
     return { url: stripeSession.url }
   }),
   getUserFile: privateProcedure.input(z.object({ key: z.string() })).mutation(async ({ ctx: { userId }, input: { key } }) => {
-    const file = await db.file.findUnique({ where: { key } })
+    const file = await db.file.findUnique({ where: { key, userId } })
 
     if (!file) throw new TRPCError({ code: 'NOT_FOUND' })
 
@@ -75,6 +79,8 @@ export const appRouter = router({
     if (!file) throw new TRPCError({ code: 'NOT_FOUND' })
 
     await db.file.delete({ where: { id } })
+    await utapi.deleteFiles(file.key)
+    await supabase.from('documents').delete().eq('metadata->>fileKey', file.key)
 
     return { success: true }
   })
