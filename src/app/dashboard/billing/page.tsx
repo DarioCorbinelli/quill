@@ -12,7 +12,7 @@ const page: FC<pageProps> = async ({}) => {
 
   const plan = await getUserSubscriptionPlan()
 
-  return <div>billing - is subscribed: {plan.isSubscribed ? 'yes' : 'no'} - <BillingForm plan={plan} /></div>
+  return <BillingForm plan={plan} className='mt-12'/>
 }
 
 export default page
