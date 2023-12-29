@@ -9,6 +9,7 @@ import { utapi } from '@/lib/uploadthing/uploadthing-server'
 import { SupabaseVectorStore } from 'langchain/vectorstores/supabase'
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai'
 import { supabase } from '@/lib/supabase'
+import { INFINITE_QUERY_LIMIT } from '@/config/inifinite-query'
 
 export const appRouter = router({
   initUserAccount: privateProcedure.query(
@@ -74,7 +75,7 @@ export const appRouter = router({
     return files
   }),
   deleteUserFile: privateProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx: { userId }, input: { id } }) => {
-    const file = await db.file.findUnique({where: { id, userId }})
+    const file = await db.file.findUnique({ where: { id, userId } })
 
     if (!file) throw new TRPCError({ code: 'NOT_FOUND' })
 
@@ -83,7 +84,50 @@ export const appRouter = router({
     await supabase.from('documents').delete().eq('metadata->>fileKey', file.key)
 
     return { success: true }
-  })
+  }),
+  getFileUploadStatus: privateProcedure.input(z.object({ id: z.string() })).query(async ({ ctx: { userId }, input: { id } }) => {
+    const file = await db.file.findUnique({ where: { id, userId } })
+
+    if (!file) throw new TRPCError({ code: 'NOT_FOUND' })
+
+    return { status: file.uploadStatus }
+  }),
+  getFileMessages: privateProcedure
+    .input(
+      z.object({
+        fileId: z.string(),
+        limit: z.number().min(1).max(100).nullish(),
+        cursor: z.string().nullish(),
+      })
+    )
+    .query(async ({ ctx: { userId }, input: { fileId, limit: passedLimit, cursor } }) => {
+      const limit = passedLimit ?? INFINITE_QUERY_LIMIT
+
+      const file = await db.file.findUnique({ where: { id: fileId, userId } })
+
+      if (!file) throw new TRPCError({ code: 'NOT_FOUND' })
+
+      const messages = await db.message.findMany({
+        where: { fileId, userId },
+        take: limit + 1,
+        orderBy: { createdAt: 'desc' },
+        cursor: cursor ? { id: cursor } : undefined,
+        select: {
+          id: true,
+          isUserMessage: true,
+          createdAt: true,
+          text: true,
+        }
+      })
+
+      let nextCursor: typeof cursor | undefined = undefined
+      if (messages.length > limit) {
+        const nextItem = messages.pop()
+        nextCursor = nextItem?.id
+      }
+
+      return { messages, nextCursor }
+    }),
 })
 
 export type AppRouter = typeof appRouter

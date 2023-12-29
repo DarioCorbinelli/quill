@@ -35,6 +35,7 @@ const onUploadComplete = async ({ metadata, file }: { metadata: Awaited<ReturnTy
       url: file.url,
       key: file.key,
       userId: metadata.userId,
+      uploadStatus: 'processing',
     },
   })
 

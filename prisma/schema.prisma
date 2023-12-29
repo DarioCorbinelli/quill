@@ -20,6 +20,7 @@ model User {
   stripeCurrentPeriodEnd DateTime?
 
   files File[]
+  messages Message[]
 }
 
 model File {
@@ -30,6 +31,8 @@ model File {
 
   user   User   @relation(fields: [userId], references: [id])
   userId String
+
+  messages Message[]
 
   uploadStatus FileStatus @default(pending)
 
@@ -42,4 +45,18 @@ enum FileStatus {
   processing
   failed
   success
+}
+
+model Message {
+  id   String @id @default(cuid())
+  text String @db.Text()
+
+  isUserMessage Boolean
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  User      User?    @relation(fields: [userId], references: [id])
+  userId    String?
+  File      File?    @relation(fields: [fileId], references: [id])
+  fileId    String?
 }
