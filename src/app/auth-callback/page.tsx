@@ -1,6 +1,7 @@
 'use client'
 
 import { trpc } from '@/lib/trpc/trpc'
+import { Loader2 } from 'lucide-react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { FC } from 'react'
 
@@ -22,7 +23,15 @@ const page: FC<pageProps> = ({}) => {
     },
   })
 
-  return <div>setting up your account...</div>
+  return (
+    <div className='mt-24 flex justify-center'>
+      <div className='flex flex-col items-center gap-2'>
+        <Loader2 className='h-8 w-8 animate-spin text-typography-800' />
+        <h3 className='text-xl font-semibold'>Stiamo preparando il tuo account...</h3>
+        <p>Sarai reindirizzato utomaticamente.</p>
+      </div>
+    </div>
+  )
 }
 
 export default page
