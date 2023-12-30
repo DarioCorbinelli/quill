@@ -17,6 +17,8 @@ const FilesView: FC<FilesViewProps> = ({ className, ...rest }) => {
 
   const { status, data: files } = trpc.getUserFiles.useQuery()
 
+  console.log(files)
+
   const utils = trpc.useUtils()
 
   const { mutate: deleteFile } = trpc.deleteUserFile.useMutation({

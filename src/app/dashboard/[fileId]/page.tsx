@@ -1,5 +1,7 @@
+import ChatWrapper from '@/components/chat/ChatWrapper'
 import { authProtectPage } from '@/helpers/auth'
 import { db } from '@/lib/db'
+import { getUserSubscriptionPlan } from '@/lib/stripe'
 import { notFound } from 'next/navigation'
 import { FC } from 'react'
 
@@ -13,6 +15,8 @@ const page: FC<pageProps> = async ({ params: { fileId } }) => {
   const { user } = await authProtectPage({
     redirect: `/dashboard/${fileId}`,
   })
+
+  const plan = await getUserSubscriptionPlan()
 
   const file = await db.file.findUnique({
     where: {
@@ -34,7 +38,7 @@ const page: FC<pageProps> = async ({ params: { fileId } }) => {
         </div>
 
         <div className='flex-[0.75] shrink-0 border-t border-border-200 lg:w-96 lg:border-l lg:border-t-0'>
-          {/* <ChatWrapper isSubscribed={plan.isSubscribed} fileId={file.id} /> */}
+          <ChatWrapper isSubscribed={plan.isSubscribed} fileId={file.id} />
         </div>
       </div>
     </div>

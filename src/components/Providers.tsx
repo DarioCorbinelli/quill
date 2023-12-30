@@ -4,6 +4,7 @@ import { trpc } from '@/lib/trpc/trpc'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { httpBatchLink } from '@trpc/client'
 import { FC, PropsWithChildren, useState } from 'react'
+import superjson from 'superjson'
 
 interface ProvidersProps extends PropsWithChildren {}
 
@@ -16,6 +17,7 @@ const Providers: FC<ProvidersProps> = ({ children }) => {
           url: 'http://localhost:3000/api/trpc',
         }),
       ],
+      transformer: superjson
     })
   )
 

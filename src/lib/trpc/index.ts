@@ -1,15 +1,13 @@
-import { db } from '@/lib/db'
-import { privateProcedure, router } from './init'
-import { TRPCError } from '@trpc/server'
-import { getUserSubscriptionPlan, stripe } from '@/lib/stripe'
-import { absoluteUrl } from '@/helpers/utils'
-import { PLANS } from '@/config/stripe'
-import z from 'zod'
-import { utapi } from '@/lib/uploadthing/uploadthing-server'
-import { SupabaseVectorStore } from 'langchain/vectorstores/supabase'
-import { OpenAIEmbeddings } from 'langchain/embeddings/openai'
-import { supabase } from '@/lib/supabase'
 import { INFINITE_QUERY_LIMIT } from '@/config/inifinite-query'
+import { PLANS } from '@/config/stripe'
+import { absoluteUrl } from '@/helpers/utils'
+import { db } from '@/lib/db'
+import { getUserSubscriptionPlan, stripe } from '@/lib/stripe'
+import { supabase } from '@/lib/supabase'
+import { utapi } from '@/lib/uploadthing/uploadthing-server'
+import { TRPCError } from '@trpc/server'
+import z from 'zod'
+import { privateProcedure, router } from './init'
 
 export const appRouter = router({
   initUserAccount: privateProcedure.query(
@@ -86,11 +84,11 @@ export const appRouter = router({
     return { success: true }
   }),
   getFileUploadStatus: privateProcedure.input(z.object({ id: z.string() })).query(async ({ ctx: { userId }, input: { id } }) => {
-    const file = await db.file.findUnique({ where: { id, userId } })
+    const file = await db.file.findUnique({ where: { id, userId }, include: {messages: {take: 5, orderBy: {createdAt: 'desc'}}} })
 
     if (!file) throw new TRPCError({ code: 'NOT_FOUND' })
 
-    return { status: file.uploadStatus }
+    return { status: file.uploadStatus, initialMessages: file.messages }
   }),
   getFileMessages: privateProcedure
     .input(
@@ -110,8 +108,8 @@ export const appRouter = router({
       const messages = await db.message.findMany({
         where: { fileId, userId },
         take: limit + 1,
-        orderBy: { createdAt: 'desc' },
         cursor: cursor ? { id: cursor } : undefined,
+        orderBy: { createdAt: 'desc' },
         select: {
           id: true,
           isUserMessage: true,
